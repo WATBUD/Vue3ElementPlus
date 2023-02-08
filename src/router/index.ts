@@ -3,6 +3,8 @@ import CatchAllRouter from '../components/CatchAllRouter.vue';
 import ScriptSetup from '../components/ScriptSetup.vue';
 import AboutView from '../views/AboutView.vue';
 import GuideView from '../views/GuideView.vue';
+import LoginView from '../views/LoginView.vue';
+
 import PageCode404 from '../views/PageCode404.vue';
 
 const routes: Array<RouteRecordRaw> = [
@@ -10,6 +12,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/:catchAll(.*)',
     //redirect: '../views/GuideView.vue',
     component: PageCode404  
+  },
+  {
+    path: '/',
+    name: 'LoginView',
+    component: LoginView,
   },
   {
     path: '/',
