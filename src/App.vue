@@ -50,9 +50,21 @@ nav a.router-link-exact-active {
 
 <script lang="ts">
 import router from "@/router/index";
+import { defineComponent } from 'vue';
 import "./NavUI.css";
-export default {
+
+export default defineComponent ({
   name: "App",
+  // created() {
+
+  // },
+  watch:{
+    test(){
+    let _login = this.$cookies.get('login');
+    console.log('%c _login:', 'color: red', _login);
+    }
+  },
+  
   data() {
     return {
       //source:"https://en.wikipedia.org/wiki/Main_Page",
@@ -64,9 +76,11 @@ export default {
 
   // },
   computed: {
-
+      
   },
   methods: {
+    
+
     routeDesignation() {
       console.log('%c routeDesignation:', 'color: red', router);
 
@@ -78,5 +92,5 @@ export default {
     }
     ,
   },
-};
+});
 </script>

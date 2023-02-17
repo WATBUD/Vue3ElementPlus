@@ -10,7 +10,6 @@ import VueCookies from 'vue-cookies'
 const app = createApp(App).use(store).use(router).use(ElementPlus).use(VueCookies, {
     expires: '7d'
 }).mount('#app')
-app
 app.$cookies.keys().forEach(cookie => app.$cookies.remove(cookie))
 app.$cookies.set('login', JSON.stringify({ A:5}))
 // app.$cookies.set('login2', JSON.stringify({ A: 5 }))
