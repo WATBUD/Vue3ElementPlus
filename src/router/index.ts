@@ -6,6 +6,9 @@ import ScriptSetup from '../components/ScriptSetup.vue';
 import AboutView from '../views/AboutView.vue';
 import GuideView from '../views/GuideView.vue';
 import LoginView from '../views/LoginView.vue';
+
+import VueCookies from 'vue-cookies';
+
 const routes: Array<RouteRecordRaw> = [
   // {
   //   path: '/:catchAll(.*)',
@@ -56,7 +59,7 @@ const routes: Array<RouteRecordRaw> = [
   }
 ]
 
-
+const Cookies:any = VueCookies;
 
 
 const router = createRouter({
@@ -67,23 +70,23 @@ const router = createRouter({
 router.beforeEach((to, from) => {
   console.log('%c enter beforeEach:', 'color: red', to);
   //window.sessionStorage.setItem('login', "55555");
-  const token = window.sessionStorage.getItem('login');
-
-
-  // if (to.name !== 'LoginView') 
-  // return { name: 'LoginView' }
-
-  console.log('%c token:', 'color: red', token);
-
-  if (token == null) {
-    console.log('%c EnterToken:', 'color: red');
-    window.sessionStorage.setItem('login', "55555");
-  }
-  else{
-    if (to.name !== 'LoginView')
-    return { name: 'LoginView' }
-  }
+  //const token = window.sessionStorage.getItem('login');
+  const Cookies_login = Cookies.get('login');
   
+  //const token2 = window.$cookies.get('token')
+  console.log('%c Cookies_login:', 'color: red', Cookies_login);
+  //console.log('%c token:', 'color: red', token);
+
+  if (Cookies_login == null) {
+    console.log('%c EnterToken:', 'color: red');
+    if (to.name !== 'LoginView')
+      return { name: 'LoginView' }
+  }
+  // else{
+
+  // }
+  // window.sessionStorage.setItem('login', "55555");
+
   //else next({ path: "/LoginView" }) 
   // const token = window.sessionStorage.getItem('login');
   //  if(token==null){

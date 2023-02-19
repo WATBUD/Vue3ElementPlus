@@ -9,7 +9,6 @@
 <script lang ="ts">
 import axios from 'axios';
 import { defineComponent } from 'vue';
-//const $cookies = inject<VueCookies>('$cookies');
 export default defineComponent({
   data() {
     return {
@@ -30,10 +29,16 @@ export default defineComponent({
     // });
 
 
-    axios.get('https://www.twse.com.tw/rsrc/lib/table/zh.json?_=1675876122814', { params: { ID: 123 } })
+    
+    axios.get('/api/test')
       .then((res) => { console.table(res.data) })
       .catch((error) => { console.error(error) })
       .finally(() => { /* 不論失敗成功皆會執行 */ })
+
+    // axios.get('https://www.twse.com.tw/rsrc/lib/table/zh.json?_=1675876122814', { params: { ID: 123 } })
+    //   .then((res) => { console.table(res.data) })
+    //   .catch((error) => { console.error(error) })
+    //   .finally(() => { /* 不論失敗成功皆會執行 */ })
 
 
 
