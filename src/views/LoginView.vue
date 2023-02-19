@@ -30,7 +30,7 @@ export default defineComponent({
 
 
     
-    axios.get('/api/test')
+    axios.get('http://220.136.185.117/api/test')
       .then((res) => { console.table(res.data) })
       .catch((error) => { console.error(error) })
       .finally(() => { /* 不論失敗成功皆會執行 */ })
