@@ -27,14 +27,34 @@ export default defineComponent({
     //   .catch(function (error) { // 请求失败处理
     //     console.log(error);
     // });
-
+    axios.get('https://localhost:7039/weatherforecast')
+      .then((res) => { console.table(res.data) })
+      .catch((error) => { 
+        console.log('%c error:', 'color: red', error);
+        if(error.code=="ERR_NETWORK"){
+          alert("API not responding");
+        }
+      })
+    .finally(() => { /* 不論失敗成功皆會執行 */ })
 
     
-    axios.get('http://220.136.185.117/api/test')
-      .then((res) => { console.table(res.data) })
-      .catch((error) => { console.error(error) })
-      .finally(() => { /* 不論失敗成功皆會執行 */ })
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
     // axios.get('https://www.twse.com.tw/rsrc/lib/table/zh.json?_=1675876122814', { params: { ID: 123 } })
     //   .then((res) => { console.table(res.data) })
     //   .catch((error) => { console.error(error) })

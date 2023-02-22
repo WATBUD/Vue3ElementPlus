@@ -3,18 +3,21 @@ import CatchAllRouter from '../components/CatchAllRouter.vue';
 import LifeCycle from '../components/LifeCycle.vue';
 import ScriptSetup from '../components/ScriptSetup.vue';
 
-import AboutView from '../views/AboutView.vue';
 import GuideView from '../views/GuideView.vue';
 import LoginView from '../views/LoginView.vue';
+
+import PageCode404 from '../views/PageCode404.vue';
+
+
 
 import VueCookies from 'vue-cookies';
 
 const routes: Array<RouteRecordRaw> = [
-  // {
-  //   path: '/:catchAll(.*)',
-  //   //redirect: '../views/GuideView.vue',
-  //   component: PageCode404  
-  // },
+  {
+    path: '/:catchAll(.*)',
+    //redirect: '../views/GuideView.vue',
+    component: PageCode404  
+  },
   {
     path: '/LoginView',
     name: 'LoginView',
@@ -22,8 +25,8 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/',
-    name: 'AboutView',
-    component: AboutView,
+    name: 'EnterPage',
+    component: LoginView,
   },
   {
     path: '/GuidePage',
@@ -49,6 +52,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'CSS_Flex',
     component: () => import(/* webpackChunkName: "about" */'../components/CSS_Flex.vue')
   },
+  {
+    path: '/RPG_Game',
+    name: 'RPG_Game',
+    component: () => import(/* webpackChunkName: "about" */'../views/RPG_Game.vue')
+  },
+
   {
     path: '/about',
     name: 'about',
