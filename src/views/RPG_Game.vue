@@ -1,12 +1,12 @@
 <template>
     <section id="MainScreen">
       <div class="visible-scrollbar" style="position: absolute; background: red;width: 50%;height:50%;z-index: 0;">
-      <ul>
-      <li style="color: blue;font-size: 48px;" v-for="(item, index) in monsterlist" :key='index'>
-        index: {{index}}, 
-        name: {{ item.name }} 
-      </li>
-    </ul>
+          <ul style="display: flex;flex-direction: column-reverse;">
+          <li style="color: blue;font-size: 48px;width: 100%;" v-for="(item, index) in monsterlist" :key='index'>
+            index: {{ index }}, 
+            name: {{ item.name }} 
+          </li>
+          </ul>
       </div>
       <div style="position: absolute;display: flex; z-index: 22;bottom: 0px;right: 0px;z-index: 44;">
       <button type="button" style="
