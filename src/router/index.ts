@@ -5,6 +5,7 @@ import ScriptSetup from '../components/ScriptSetup.vue';
 
 import GuideView from '../views/GuideView.vue';
 import LoginView from '../views/LoginView.vue';
+import RPG_GameView from '../views/RPG_Game.vue';
 
 import PageCode404 from '../views/PageCode404.vue';
 
@@ -55,7 +56,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/RPG_Game',
     name: 'RPG_Game',
-    component: () => import(/* webpackChunkName: "about" */'../views/RPG_Game.vue')
+    component: RPG_GameView
   },
 
   {

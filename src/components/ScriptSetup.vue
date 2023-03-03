@@ -18,6 +18,5 @@
 
 
 
-const NavigatorFour = 'Navigator 4'
 
 </script>

@@ -12,17 +12,5 @@
 </template>
 <script lang="ts" setup>
 
-import router from "@/router/index";
-
-
-function routeDesignation(pathName: string) {
-  console.log('%c routeDesignation:', 'color: red', router);
-  router.push({
-    path: "/" + pathName,
-    params: {
-    }
-  });
-}
-
 
 </script>

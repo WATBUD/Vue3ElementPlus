@@ -32,7 +32,9 @@ export default defineComponent({
       .catch((error) => { 
         console.log('%c error:', 'color: red', error);
         if(error.code=="ERR_NETWORK"){
-          alert("API not responding");
+          //alert("API not responding");
+          alert("The backend server is down, please contact the author");
+
         }
       })
     .finally(() => { /* 不論失敗成功皆會執行 */ })
@@ -68,6 +70,8 @@ export default defineComponent({
     handleLogin() {
       this.$cookies.set('login', JSON.stringify({ A: 5 }))
       const keys = this.$cookies.keys() 
+      //RPG_GameView
+      this.$router.push('/RPG_Game');
       console.log('%c this.$cookies.keys:', 'color: red', keys);
 
     },
