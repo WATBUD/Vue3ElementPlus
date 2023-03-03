@@ -37,7 +37,7 @@
     
   </section>
   <ArrayPanel v-if="CentralManager._CoordinatesPanal"
-                :_ArrayProp="CentralManager._monsterManager.getMonsterMaplist()"
+                :_ArrayProp="CentralManager._monsterManager.getJSON_MonsterMaplist()"
   ></ArrayPanel>
 </template>
 
@@ -87,12 +87,6 @@ export default defineComponent({
   methods: {
     spawnMonster() {
       //console.log('%c spawnMonster:', 'color: red', this.timer);
-      //this.monsterMaplist=[];
-      //this.monsterMaplist = JSON.parse(JSON.stringify(_CentralManager._monsterManager.getMonsterMaplist()));
-      //this.list=[];
-      //this.list= this.monsterMaplist;
-      //console.log('%c spawnMonster:', 'color: red', this.list);
-      //this.list= JSON.parse(JSON.stringify(_CentralManager._monsterManager.getMonsterMaplist()));
 
       
       this.$forceUpdate();
@@ -115,8 +109,13 @@ export default defineComponent({
     // },
     removeCookie() {
       this.$cookies.remove('login')
-      const keys = this.$cookies.keys()
-      this.$router.push('/EnterPage');
+      const keys = this.$cookies.keys();
+      this.CentralManager.centralBeforeDestroy();
+      this.CentralManager.instance = null;
+      //this.$router.push('/EnterPage');
+      //this.$router.push({ path: '/EnterPage', query: { t: Date.now() } });
+      //this.$router.go(0);
+      location.reload();
       console.log('%c this.$cookies.keys:', 'color: red', keys);
     }
   }

@@ -118,6 +118,7 @@ export class GeneraAbilityValue {
 
   }
   beforeDestroy() {
+    console.log('%c beforeDestroy:', 'color: red', `beforeDestroy: ${this.name}`);
     this.timerlist.forEach((element) => {
       clearInterval(element);
     });
@@ -282,6 +283,15 @@ export class CentralManager{
     //   //console.log('%c viewAllCoordinates:', 'color: blue', element);
     // } 
   }
+  centralBeforeDestroy(){
+    var _list = this._monsterManager.getMonsterMaplist();
+    _list.push(this._GamePlayer);
+    //this._GamePlayer.beforeDestroy();
+    for (let index = 0; index < _list.length; index++) {
+      const element = _list[index];
+      _list[index].beforeDestroy();
+    }
+  }
   addLogMessage(logMessage=""){
     this._LogMessage.push(logMessage);
     if (this._LogMessage.length>50) {
@@ -312,11 +322,13 @@ export class MonsterManager {
     //console.log('%c GenerateSpecifieMonster_monsterMaplist:', 'color: red', this.monsterMaplist);
     //this.monsterMaplist.push(new GoblinMonster());
     }
-
+    this.getJSON_MonsterMaplist = function () {
+      //this.monsterMaplist = JSON.parse(JSON.stringify(monsterMaplist));
+      return JSON.parse(JSON.stringify(monsterMaplist));
+    }
     this.getMonsterMaplist = function () {
       //this.monsterMaplist = JSON.parse(JSON.stringify(monsterMaplist));
-
-      return JSON.parse(JSON.stringify(monsterMaplist));
+      return monsterMaplist;
     }
     this.mapInitializationMonster = function (mapList) {
         mapList.forEach(element => {
