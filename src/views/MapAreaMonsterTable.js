@@ -8,6 +8,11 @@ function distanceCalculation(array1 = [0, 0], array2 = [0, 0]) {
 
   return _dis;
 }
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 function movePoint(x, y, angle, distance) {
   //console.log('%c movePoint:', 'color: red', x, y, angle, distance);
 
@@ -34,7 +39,7 @@ function removeDecimalsCoordinates(array = []) {
 }
 export class GeneraAbilityValue {
   speedOfAction = 0.7;
-  healthPoints = 0;
+  healthPoints = 100;
   attackSpeed = 0.5;
   maximumRangeOfMovement =5;
   state = "on standby";
@@ -48,35 +53,36 @@ export class GeneraAbilityValue {
     this.id = name;
     this.name = name;
     //this._this = this;
-    this.coordinatePosition = [getRandomArbitrary(0, mapSize[0]), getRandomArbitrary(0, mapSize[1])]; 
+    this.coordinatePosition = [getRandomInt(0, mapSize[0]), getRandomInt(0, mapSize[1])]; 
     //console.log('%c this.mapSize:', 'color: red', mapSize);
-
     //console.log('%c this.coordinatePosition:', 'color: red', this.coordinatePosition);
-    
-
+    this.timerlist.push(setInterval(this.attackSpeedInterval.bind(this), this.attackSpeed * 1000));
     this.timerlist.push(setInterval(this.speedOfActionInterval.bind(this), this.speedOfAction * 100));
   }
   
   attackSpeedInterval() {
+    if (this.state == "in combat") {
+      CentralManager.instance._GamePlayer.injuried(this.name,5);
+    }
     //console.log('%c attackSpeedInterval:', 'color: red');
   }
   speedOfActionInterval() {
     //console.log('%c this.speedOfActionInterval:', 'color: red', this.coordinatePosition);
-    var central =MiniMapManager.instance;
+    var central =CentralManager.instance;
     //console.log('%c central:', 'color: red', central);
-     
+    //console.log('%c determineWhetherItIsInTheCombatRange:', 'color: red', _dis);
     if (this.state=="on standby"){
-      this.destinationAngle = getRandomArbitrary(0, 360); 
-      var _RandomMovement = getRandomArbitrary(1, this.maximumRangeOfMovement);
+      this.destinationAngle = getRandomInt(0, 360); 
+      var _RandomMovement = getRandomInt(1, this.maximumRangeOfMovement);
       this.destinationCoordinates = movePoint(this.coordinatePosition[0], this.coordinatePosition[1], this.destinationAngle,
         _RandomMovement);
        
       var pass = false;
       while (!pass) {
         //console.log('%c _temp', 'color: blue', _temp);
-        this.destinationAngle = getRandomArbitrary(0, 360);
+        this.destinationAngle = getRandomInt(0, 360);
         this.destinationCoordinates = movePoint(this.coordinatePosition[0], this.coordinatePosition[1], this.destinationAngle,
-          getRandomArbitrary(1, this.maximumRangeOfMovement))
+          getRandomInt(1, this.maximumRangeOfMovement))
         var _temp = this.destinationCoordinates;
 
         if (_temp[0] < mapSize[0] && _temp[1] < mapSize[1] &&
@@ -93,16 +99,20 @@ export class GeneraAbilityValue {
     //var _dis = distanceCalculation(this.coordinatePosition, this.destinationCoordinates);
 
     //console.log('%c this._dis:', 'color: red', _dis);
-    else if (distanceCalculation(this.coordinatePosition, this.destinationCoordinates) >1)
+    else if (this.state == "on the move")
     {
-      this.coordinatePosition = movePoint(this.coordinatePosition[0], this.coordinatePosition[1], this.destinationAngle, 0.1); 
-      //console.log('%c this.destinationCoordinates:', 'color: red', this.destinationCoordinates);
-      //console.log('%c this.coordinatePosition:', 'color: red', this.coordinatePosition);
+      if (distanceCalculation(this.coordinatePosition, this.destinationCoordinates) > 1){
+        this.coordinatePosition = movePoint(this.coordinatePosition[0], this.coordinatePosition[1], this.destinationAngle, 0.1); 
+        var _dis = central._GamePlayer.determineWhetherItIsInTheCombatRange(this.coordinatePosition);
+        if (_dis < 6) {
+          this.state = "in combat"
+        }
+      }
+      else{
+        this.state = "on standby"
+        //console.log('%c this.state:on standby', 'color: blue');
+      }
 
-    }
-    else{
-      this.state = "on standby";
-      //console.log('%c this.state:on standby', 'color: blue');
     }
     //console.log('%c speedOfActionInterval:', 'color: red');
 
@@ -115,27 +125,46 @@ export class GeneraAbilityValue {
     //   console.log(value);
     // });
   }
-}
+  injuried(_attacker="空",_damageValue=0){
+    if (this.healthPoints > 0) {
+      this.healthPoints -= _damageValue;
+      console.log('%c this.healthPoints:', 'color: red', this.healthPoints);
 
-export class GamePlayer{
-  speedOfAction = 0.7;
-  healthPoints = 0;
-  attackSpeed = 0.5;
-  maximumRangeOfMovement = 5;
-  state = "on standby";
-  timerlist = [
-  ];
-  coordinatePosition = [20, 20];
-  destinationCoordinates = [5, 5];
-  destinationAngle = 0;
+      //CentralManager.instance.addLogMessage(`The ${this.name} takes ${_damageValue} points of damage `);
+      CentralManager.instance.addLogMessage(`The ${_attacker} attacks the ${this.name}, causing ${_damageValue} points of damage. `);
 
-  constructor(index= 0) {
-    //super(index);
-        
+      
+      if (this.healthPoints <= 0) {
+        CentralManager.instance.addLogMessage(`The ${this.name} is dead `);
+        this.healthPoints = 0;
+        this.beforeDestroy();
+        console.log('%c CentralManager.instance:', 'color: red', CentralManager.instance);
+
+      }
+    }
+
   }
-
-
+  determineWhetherItIsInTheCombatRange(inputCoordinate){
+    return distanceCalculation(this.coordinatePosition, inputCoordinate);
+  }
+  refreshMapSize(){
+    this.coordinatePosition = [mapSize[0] / 2, mapSize[1] / 2]; 
+  }
 }
+export class GamePlayer extends GeneraAbilityValue {
+  constructor() {
+    super();
+    //console.log('%c SlimeMonster:', 'color: red');
+
+    this.name = "Player";
+    console.log('%c this.coordinatePosition:', 'color: red', this.coordinatePosition);
+  }
+  speedOfActionInterval() {
+    //console.log('%c GamePlayer.speedOfActionInterval:', 'color: #34a7ce8f');
+
+  }
+}
+
 
 export class SlimeMonster extends GeneraAbilityValue {
   constructor() {
@@ -157,24 +186,26 @@ export class GoblinMonster extends GeneraAbilityValue {
   }
 }
 var mapSize = [5, 5];
-export class MiniMapManager{
+export class CentralManager{
 
   _monsterManager = new MonsterManager();
   _BackpackBool=false;
   _AbilityTableBool = false;
   _CoordinatesPanal = false;
   _GamePlayer = new GamePlayer();
+  _LogMessage=[];
   timerlist = [
   ];
   constructor() {
-    if (!MiniMapManager.instance) {
-      MiniMapManager.instance = this;
+    if (!CentralManager.instance) {
+      CentralManager.instance = this;
     }
-    //return MiniMapManager.instance;
-    console.log('%c MiniMapManager:', 'color: #afcdf3;');
+    //return CentralManager.instance;
+    console.log('%c CentralManager:', 'color: #afcdf3;');
     this.timerlist.push(setInterval(this.setAllCoordinatesPoint.bind(this), this.speedOfAction * 500));
   }
   setAllCoordinatesPoint() {
+
     var canvas = document.getElementById("MiniMap");
     //console.log(canvas)
     if (canvas == null)
@@ -183,6 +214,8 @@ export class MiniMapManager{
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     var _list=this._monsterManager.getMonsterMaplist(); 
+    _list.push(this._GamePlayer);
+
     //console.log('%c _list:', 'color: yellow', _list);
     //console.log('%c _list:', 'color: yellow', canvas.width, canvas.height);
 
@@ -199,23 +232,34 @@ export class MiniMapManager{
     //-----------circle-----------
     //ctx.strokeStyle = "rgb(255 255 255 / 100%)";
     //ctx.lineWidth = 1;
-    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff'];
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#c82124'];
 
     for (let index = 0; index < _list.length; index++) {
+
+      if (_list[index].name=='Player'){
+        ctx.fillStyle = '#000000';
+      }
+      else{
+        ctx.fillStyle = '#ff0000';
+      }
+      //var zzz = colors[getRandomInt(0, colors.length)];
+
+      //console.log('%c zzz:', 'color: yellow', getRandomInt(0, colors.length));
       ctx.beginPath();
       const element = _list[index].coordinatePosition;
-      ctx.arc(element[0], element[1], 1, 0, 2 * Math.PI);
-      ctx.fillStyle = colors[getRandomArbitrary(0, colors.length)];
+      ctx.arc(element[0], element[1], 1, 0, 2 * Math.PI);      
       ctx.fill();
       //ctx.stroke();
     } 
-    //ctx.closePath();
     //console.log("This is a static function.");
   }
   enterMap(mapName){
     var mapData = eval(`${'NOVICE_MAP'}`);
+    this.addLogMessage("EnterMap NOVICE_MAP");
+
     console.log('%c mapData:', 'color: green', mapData);
     mapSize = mapData.mapSize;
+    this._GamePlayer.refreshMapSize();
     var canvas = document.getElementById("MiniMap");
     //console.log(canvas)
     if (canvas == null)
@@ -223,6 +267,8 @@ export class MiniMapManager{
     var ctx = canvas.getContext('2d');
     canvas.width = mapSize[0];
     canvas.height = mapSize[1];
+    this.addLogMessage("mapInitializationMonster");
+
     this._monsterManager.mapInitializationMonster(mapData.mapMonster);
   }
   viewAllCoordinates(){
@@ -235,11 +281,17 @@ export class MiniMapManager{
     //   const element = _list[index].coordinatePosition;
     //   //console.log('%c viewAllCoordinates:', 'color: blue', element);
     // } 
-
+  }
+  addLogMessage(logMessage=""){
+    this._LogMessage.push(logMessage);
+    if (this._LogMessage.length>50) {
+      //this._LogMessage.pop(); 
+      this._LogMessage.shift();
+    }
 
   }
   static showThis() {
-    console.log('%c showThis:', 'color: blue', MiniMapManager.instance);
+    console.log('%c showThis:', 'color: blue', CentralManager.instance);
     
   }
 }
@@ -262,7 +314,6 @@ export class MonsterManager {
     }
 
     this.getMonsterMaplist = function () {
-
       //this.monsterMaplist = JSON.parse(JSON.stringify(monsterMaplist));
 
       return JSON.parse(JSON.stringify(monsterMaplist));
@@ -302,8 +353,8 @@ export const NOVICE_MAP =
   {
   mapSize: [100, 100],
   mapMonster:[
-    { className: "SlimeMonster", maxNumber: 4, name: "Slime" },
-    { className: "GoblinMonster", maxNumber: 0, name: "Goblin" }
+    { className: "SlimeMonster", maxNumber: 160, name: "Slime" },
+    { className: "GoblinMonster", maxNumber: 4, name: "Goblin" }
   ]};
 
 //export default zzz=new MonsterManager();

@@ -2,10 +2,10 @@
   <section id="MainScreen">
     <div class="visible-scrollbar" style="position: absolute; background: red;width: 50%;height:50%;z-index: 0;">
       <ul style="display: flex;flex-direction: column-reverse;">
-        <li style="color: blue;font-size: 200%;width: 100%;" v-for="(item, index) in MiniMapManager._monsterManager.getMonsterMaplist()" :key='index'>
-          index: {{ index }},
-          name: {{ item["name"]}},
-          healthPoints: {{ item["healthPoints"]  }}
+        <li style="color: blue;font-size: 200%;width: 100%;" v-for="(item, index) in CentralManager._LogMessage" :key='index'>
+          <!-- index: {{ index }} -->
+          log=> {{ item}}
+          <!-- healthPoints: {{ item["healthPoints"]  }} -->
         </li>
       </ul>
     </div>
@@ -14,30 +14,30 @@
     <div style="position: absolute;display: flex; z-index: 22;bottom: 0px;right: 0px;z-index: 44;">
       <button type="button" style="background: #1eff007a;
                 width: 10vw;
-                height: 10vh;" v-on:click="MiniMapManager._BackpackBool = !MiniMapManager._BackpackBool ">背包</button>
+                height: 10vh;" v-on:click="CentralManager._BackpackBool = !CentralManager._BackpackBool ">背包</button>
       <button type="button" style="
               background: #000dffe0;
               width: 10vw;
-              height: 10vh;" @click="MiniMapManager._AbilityTableBool = !MiniMapManager._AbilityTableBool">能力</button>
+              height: 10vh;" @click="CentralManager._AbilityTableBool = !CentralManager._AbilityTableBool">能力</button>
       <button type="button" style="
                   background: #000dffe0;
                   width: 10vw;
-                  height: 10vh;" @click="  MiniMapManager.viewAllCoordinates()">查看所有座標</button>
+                  height: 10vh;" @click="  CentralManager.viewAllCoordinates()">顯示怪物資訊</button>
       <button type="button" style="
                     background: #000dffe0;
                     width: 10vw;
                     height: 10vh;" @click="removeCookie()">登出遊戲</button>
     </div>
-    <div v-if="MiniMapManager._BackpackBool" class="FillAreaScreen" style="background:#000dffe0;">
+    <div v-if="CentralManager._BackpackBool" class="FillAreaScreen" style="background:#000dffe0;">
       BackpackBool
     </div>
-    <div v-if="MiniMapManager._AbilityTableBool" class="FillAreaScreen" style="background:#1eff007a;">
+    <div v-if="CentralManager._AbilityTableBool" class="FillAreaScreen" style="background:#1eff007a;">
       AbilityTableBool
     </div>
     
   </section>
-  <ArrayPanel v-if="MiniMapManager._CoordinatesPanal"
-                :_ArrayProp="MiniMapManager._monsterManager.getMonsterMaplist()"
+  <ArrayPanel v-if="CentralManager._CoordinatesPanal"
+                :_ArrayProp="CentralManager._monsterManager.getMonsterMaplist()"
   ></ArrayPanel>
 </template>
 
@@ -48,21 +48,21 @@ import "./RPG_Game.css";
 //import { MonsterManager, monsterMaplist, SlimeMonster } from './RPG_Game';
 import ArrayPanel from '@/components/ArrayPanel.vue';
 import * as RPG_GameModule from './MapAreaMonsterTable.js';
-const _MiniMapManager =new RPG_GameModule.MiniMapManager()
+const _CentralManager =new RPG_GameModule.CentralManager()
 export default defineComponent({
   components: {
     ArrayPanel
   },
   // props: {
-  //   _MiniMapManager: {
+  //   _CentralManager: {
   //     type:Object
   //   }
   // },
   data() {
     return {
       timer: 0,
-      MiniMapManager: _MiniMapManager,
-      //MiniMapManager: _MiniMapManager,new RPG_GameModule.MiniMapManager() 
+      CentralManager: _CentralManager,
+      //CentralManager: _CentralManager,new RPG_GameModule.CentralManager() 
       list: [
         { id: '123456789', name: '選項 666' },
         { id2131: '234567890', name: '選項 2' },
@@ -76,7 +76,7 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.MiniMapManager.enterMap("NOVICE_MAP");
+    this.CentralManager.enterMap("NOVICE_MAP");
     this.timer = setInterval(this.spawnMonster, 1000);
     //var aaa= RPG_GameModule.callEval("SlimeMonster");
     //console.log('%c eval(abyssMap[0].name):', 'color: red', aaa);
@@ -88,15 +88,15 @@ export default defineComponent({
     spawnMonster() {
       //console.log('%c spawnMonster:', 'color: red', this.timer);
       //this.monsterMaplist=[];
-      //this.monsterMaplist = JSON.parse(JSON.stringify(_MiniMapManager._monsterManager.getMonsterMaplist()));
+      //this.monsterMaplist = JSON.parse(JSON.stringify(_CentralManager._monsterManager.getMonsterMaplist()));
       //this.list=[];
       //this.list= this.monsterMaplist;
-      console.log('%c spawnMonster:', 'color: red', this.list);
-      //this.list= JSON.parse(JSON.stringify(_MiniMapManager._monsterManager.getMonsterMaplist()));
+      //console.log('%c spawnMonster:', 'color: red', this.list);
+      //this.list= JSON.parse(JSON.stringify(_CentralManager._monsterManager.getMonsterMaplist()));
 
       
       this.$forceUpdate();
-      //_MiniMapManager.generateSpecifieMonster("GoblinMonster");
+      //_CentralManager.generateSpecifieMonster("GoblinMonster");
 
 
 
@@ -106,8 +106,8 @@ export default defineComponent({
     },
     // viewAllCoordinates(){
     //   console.log('%c viewAllCoordinates:', 'color: red');
-    //   this.MiniMapManager._CoordinatesPanal =! this.MiniMapManager._CoordinatesPanal;
-    //   this.MiniMapManager.viewAllCoordinates();
+    //   this.CentralManager._CoordinatesPanal =! this.CentralManager._CoordinatesPanal;
+    //   this.CentralManager.viewAllCoordinates();
     //   //this.$forceUpdate();
     //   // this.list.push({ id: '345678901', name: '選項 3' });
     //   // this.list = this.monsterMaplist;
