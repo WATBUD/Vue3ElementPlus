@@ -214,7 +214,7 @@ export class CentralManager{
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    var _list=this._monsterManager.getMonsterMaplist(); 
+    var _list = this._monsterManager.getJSON_MonsterMaplist(); 
     _list.push(this._GamePlayer);
 
     //console.log('%c _list:', 'color: yellow', _list);
@@ -274,14 +274,16 @@ export class CentralManager{
   }
   viewAllCoordinates(){
     this._CoordinatesPanal = !this._CoordinatesPanal;
-    var _list = this._monsterManager.getMonsterMaplist(); 
- 
-
     //return _list.filter(word => word.length > 6);
     // for (let index = 0; index < _list.length; index++) {
     //   const element = _list[index].coordinatePosition;
     //   //console.log('%c viewAllCoordinates:', 'color: blue', element);
     // } 
+  }
+  obtainBiologicalInformationOnTheMap(){
+    var _list = this._monsterManager.getJSON_MonsterMaplist();
+    _list.push(this._GamePlayer);
+    return _list;
   }
   centralBeforeDestroy(){
     var _list = this._monsterManager.getMonsterMaplist();
@@ -365,7 +367,7 @@ export const NOVICE_MAP =
   {
   mapSize: [100, 100],
   mapMonster:[
-    { className: "SlimeMonster", maxNumber: 160, name: "Slime" },
+    { className: "SlimeMonster", maxNumber: 4, name: "Slime" },
     { className: "GoblinMonster", maxNumber: 4, name: "Goblin" }
   ]};
 

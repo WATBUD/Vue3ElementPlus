@@ -22,11 +22,11 @@
       <button type="button" style="
                   background: #000dffe0;
                   width: 10vw;
-                  height: 10vh;" @click="  CentralManager.viewAllCoordinates()">顯示怪物資訊</button>
+                  height: 10vh;" @click="  CentralManager.viewAllCoordinates()">顯示怪物與玩家資訊</button>
       <button type="button" style="
                     background: #000dffe0;
                     width: 10vw;
-                    height: 10vh;" @click="removeCookie()">登出遊戲</button>
+                    height: 10vh;" @click=" removeCookie()">登出遊戲</button>
     </div>
     <div v-if="CentralManager._BackpackBool" class="FillAreaScreen" style="background:#000dffe0;">
       BackpackBool
@@ -37,7 +37,7 @@
     
   </section>
   <ArrayPanel v-if="CentralManager._CoordinatesPanal"
-                :_ArrayProp="CentralManager._monsterManager.getJSON_MonsterMaplist()"
+                :_ArrayProp="CentralManager.obtainBiologicalInformationOnTheMap()"
   ></ArrayPanel>
 </template>
 
