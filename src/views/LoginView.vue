@@ -22,58 +22,38 @@ export default defineComponent({
     }
   },
   mounted() {
-    // axios.get('https://www.twse.com.tw/rsrc/lib/table/zh.json?_=1675876122814')
-    //   .then(response => (this.info = response))
-    //   .catch(function (error) { // 请求失败处理
-    //     console.log(error);
-    // });
-    axios.get('https://localhost:7039/weatherforecast')
-      .then((res) => { console.table(res.data) })
-      .catch((error) => { 
-        console.log('%c error:', 'color: red', error);
-        if(error.code=="ERR_NETWORK"){
-          //alert("API not responding");
-          alert("The backend server is down, please contact the author");
-
-        }
-      })
-    .finally(() => { /* 不論失敗成功皆會執行 */ })
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
+    //window.addEventListener('beforeunload', this.alertLogin);
     // axios.get('https://www.twse.com.tw/rsrc/lib/table/zh.json?_=1675876122814', { params: { ID: 123 } })
     //   .then((res) => { console.table(res.data) })
     //   .catch((error) => { console.error(error) })
     //   .finally(() => { /* 不論失敗成功皆會執行 */ })
-
-
-
   },
   methods: {
 
     handleLogin() {
+      axios.get('https://localhost:7039/weatherforecast')
+        .then((res) => { console.table(res.data) })
+        .catch((error) => {
+          console.log('%c error:', 'color: red', error);
+          if (error.code == "ERR_NETWORK") {
+            //alert("API not responding");
+            //alert("The backend server is down, please contact the author");
+            if (window.confirm('The backend server is down, please contact the author')) {
+              this.alertLogin();
+            } else {
+              // 使用者點擊了“取消”按鈕
+            }
+          }
+        })
+        .finally(() => { /* 不論失敗成功皆會執行 */ })
+
+    },
+    alertLogin(){
+      console.log('%c alertLogin', 'color: red');
       this.$cookies.set('login', JSON.stringify({ A: 5 }))
-      const keys = this.$cookies.keys() 
+      const keys = this.$cookies.keys()
       //RPG_GameView
       this.$router.push('/RPG_Game');
-      console.log('%c this.$cookies.keys:', 'color: red', keys);
-
     },
     removeCookie() {
       this.$cookies.remove('login')

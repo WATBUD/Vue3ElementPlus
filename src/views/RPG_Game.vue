@@ -114,8 +114,7 @@ export default defineComponent({
       this.CentralManager.instance = null;
       //this.$router.push('/EnterPage');
       //this.$router.push({ path: '/EnterPage', query: { t: Date.now() } });
-      //this.$router.go(0);
-      location.reload();
+      location.reload();//this.$router.go(0);
       console.log('%c this.$cookies.keys:', 'color: red', keys);
     }
   }
