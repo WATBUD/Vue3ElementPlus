@@ -47,7 +47,8 @@ import { defineComponent } from 'vue';
 import "./RPG_Game.css";
 //import { MonsterManager, monsterMaplist, SlimeMonster } from './RPG_Game';
 import ArrayPanel from '@/components/ArrayPanel.vue';
-import * as RPG_GameModule from './MapAreaMonsterTable.js';
+import * as RPG_GameMapConfig from './RPG_GameMapConfig.js';
+import * as RPG_GameModule from './RPG_GameModule.js';
 const _CentralManager =new RPG_GameModule.CentralManager()
 export default defineComponent({
   components: {
@@ -76,7 +77,9 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.CentralManager.enterMap("NOVICE_MAP");
+  console.log('%c RPG_GameMapConfig:', 'color: red', RPG_GameMapConfig);
+
+    this.CentralManager.enterMap(RPG_GameMapConfig.NOVICE_MAP);
     this.timer = setInterval(this.spawnMonster, 1000);
     //var aaa= RPG_GameModule.callEval("SlimeMonster");
     //console.log('%c eval(abyssMap[0].name):', 'color: red', aaa);

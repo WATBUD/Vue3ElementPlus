@@ -254,9 +254,9 @@ export class CentralManager{
     } 
     //console.log("This is a static function.");
   }
-  enterMap(mapName){
-    var mapData = eval(`${'NOVICE_MAP'}`);
-    this.addLogMessage("EnterMap NOVICE_MAP");
+  enterMap(mapData){
+    //var mapData = eval(`${mapData.}`);
+    this.addLogMessage(`EnterMap ${mapData.mapName}`);
 
     console.log('%c mapData:', 'color: green', mapData);
     mapSize = mapData.mapSize;
@@ -308,12 +308,6 @@ export class CentralManager{
   }
 }
 
-export class Person {
-  constructor() {
-    console.log("Person");
-  }
-}
-
 export class MonsterManager {
   constructor() {
     let monsterMaplist = [];
@@ -354,22 +348,7 @@ export const callEval = (FuncionName) => {
   return eval(`new ${FuncionName}()`)
 };
 
-export const ABYSS_MAP =
-{
-  mapSize: [500, 500],
-  mapMonster: [
-    { className: "SlimeMonster", maxNumber: 6, name: "Slime" },
-    { className: "GoblinMonster", maxNumber: 0, name: "Goblin" }
-  ]
-};
 
-export const NOVICE_MAP =
-  {
-  mapSize: [100, 100],
-  mapMonster:[
-    { className: "SlimeMonster", maxNumber: 4, name: "Slime" },
-    { className: "GoblinMonster", maxNumber: 4, name: "Goblin" }
-  ]};
 
 //export default zzz=new MonsterManager();
 
