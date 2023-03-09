@@ -101,15 +101,6 @@ export default defineComponent({
       //console.log('%c spawnMonster:', 'color: red', this.list);
 
     },
-    // viewAllCoordinates(){
-    //   console.log('%c viewAllCoordinates:', 'color: red');
-    //   this.CentralManager._CoordinatesPanal =! this.CentralManager._CoordinatesPanal;
-    //   this.CentralManager.viewAllCoordinates();
-    //   //this.$forceUpdate();
-    //   // this.list.push({ id: '345678901', name: '選項 3' });
-    //   // this.list = this.monsterMaplist;
-
-    // },
     removeCookie() {
       this.$cookies.remove('login')
       const keys = this.$cookies.keys();

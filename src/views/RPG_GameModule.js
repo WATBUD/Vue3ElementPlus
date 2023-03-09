@@ -1,48 +1,18 @@
 
-function getRandomArbitrary(min, max) {
-  return Math.random() * (max - min) + min;
-}
-function distanceCalculation(array1 = [0, 0], array2 = [0, 0]) {
-  var _dis = Math.sqrt(Math.pow((array1[0] - array2[0]), 2) + Math.pow((array1[1] - array2[1]), 2));
-  //console.log('%c _dis:', 'color: blue', _dis);
 
-  return _dis;
-}
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-function movePoint(x, y, angle, distance) {
-  //console.log('%c movePoint:', 'color: red', x, y, angle, distance);
+import * as _GF from './GeneralFunction.js';
 
-  const radians = angle * Math.PI / 180; // 將角度轉換為弧度
-  const dx = distance * Math.cos(radians);
-  const dy = distance * Math.sin(radians);
-  return [x + dx, y + dy];  
-}
-function removeDecimalsFromArray(array = []){
-  for (let index = 0; index < array.length; index++) {
-    array[index] = Math.floor(array[index]);
-  }
-  // array.forEach(element => {
-  //      element = Math.floor(element);
-  // });
-  console.log('%c removeDecimalsFromArray:', 'color: red', array);
-  return array;
-}
-function removeDecimalsCoordinates(array = []) {
-    array[0] = Math.floor(array[0]);
-    array[1] = Math.floor(array[1]);
-  console.log('%c removeDecimalsCoordinates:', 'color: red', array);
-  return array;
-}
 export class GeneraAbilityValue {
+  index=0;
+  basicLevel =1;
   speedOfAction = 0.7;
   healthPoints = 100;
   attackSpeed = 0.5;
   maximumRangeOfMovement =5;
+  attackDistance = 5;
+  attackPower=5;
   state = "on standby";
+  experienceRequiredForUpgrade=100;
   timerlist= [
   ];
   coordinatePosition = [20, 20];
@@ -53,7 +23,7 @@ export class GeneraAbilityValue {
     this.id = name;
     this.name = name;
     //this._this = this;
-    this.coordinatePosition = [getRandomInt(0, mapSize[0]), getRandomInt(0, mapSize[1])]; 
+    this.coordinatePosition = [_GF.getRandomInt(0, CentralManager.instance.mapSize[0]), _GF.getRandomInt(0, CentralManager.instance.mapSize[1])]; 
     //console.log('%c this.mapSize:', 'color: red', mapSize);
     //console.log('%c this.coordinatePosition:', 'color: red', this.coordinatePosition);
     this.timerlist.push(setInterval(this.attackSpeedInterval.bind(this), this.attackSpeed * 1000));
@@ -62,7 +32,7 @@ export class GeneraAbilityValue {
   
   attackSpeedInterval() {
     if (this.state == "in combat") {
-      CentralManager.instance._GamePlayer.injuried(this.name,5);
+      CentralManager.instance._GamePlayer.injuried(this.name, this.attackPower);
     }
     //console.log('%c attackSpeedInterval:', 'color: red');
   }
@@ -70,22 +40,21 @@ export class GeneraAbilityValue {
     //console.log('%c this.speedOfActionInterval:', 'color: red', this.coordinatePosition);
     var central =CentralManager.instance;
     //console.log('%c central:', 'color: red', central);
-    //console.log('%c determineWhetherItIsInTheCombatRange:', 'color: red', _dis);
     if (this.state=="on standby"){
-      this.destinationAngle = getRandomInt(0, 360); 
-      var _RandomMovement = getRandomInt(1, this.maximumRangeOfMovement);
-      this.destinationCoordinates = movePoint(this.coordinatePosition[0], this.coordinatePosition[1], this.destinationAngle,
+      this.destinationAngle = _GF.getRandomInt(0, 360); 
+      var _RandomMovement = _GF.getRandomInt(1, this.maximumRangeOfMovement);
+      this.destinationCoordinates = _GF.movePoint(this.coordinatePosition[0], this.coordinatePosition[1], this.destinationAngle,
         _RandomMovement);
        
       var pass = false;
       while (!pass) {
         //console.log('%c _temp', 'color: blue', _temp);
-        this.destinationAngle = getRandomInt(0, 360);
-        this.destinationCoordinates = movePoint(this.coordinatePosition[0], this.coordinatePosition[1], this.destinationAngle,
-          getRandomInt(1, this.maximumRangeOfMovement))
+        this.destinationAngle = _GF.getRandomInt(0, 360);
+        this.destinationCoordinates = _GF.movePoint(this.coordinatePosition[0], this.coordinatePosition[1], this.destinationAngle,
+          _GF.getRandomInt(1, this.maximumRangeOfMovement))
         var _temp = this.destinationCoordinates;
 
-        if (_temp[0] < mapSize[0] && _temp[1] < mapSize[1] &&
+        if (_temp[0] < CentralManager.instance.mapSize[0] && _temp[1] < CentralManager.instance.mapSize[1] &&
           _temp[0] > 1 && _temp[1] > 1) {
           pass = true;
         }
@@ -96,15 +65,15 @@ export class GeneraAbilityValue {
       //console.log('%c this.state:on the move', 'color: blue');
 
     }
-    //var _dis = distanceCalculation(this.coordinatePosition, this.destinationCoordinates);
+    //var _dis = _GF.distanceCalculation(this.coordinatePosition, this.destinationCoordinates);
 
     //console.log('%c this._dis:', 'color: red', _dis);
     else if (this.state == "on the move")
     {
-      if (distanceCalculation(this.coordinatePosition, this.destinationCoordinates) > 1){
-        this.coordinatePosition = movePoint(this.coordinatePosition[0], this.coordinatePosition[1], this.destinationAngle, 0.1); 
+      if (_GF.distanceCalculation(this.coordinatePosition, this.destinationCoordinates) > 1){
+        this.coordinatePosition = _GF.movePoint(this.coordinatePosition[0], this.coordinatePosition[1], this.destinationAngle, 0.1); 
         var _dis = central._GamePlayer.determineWhetherItIsInTheCombatRange(this.coordinatePosition);
-        if (_dis < 6) {
+        if (_dis <= this.attackDistance) {
           this.state = "in combat"
         }
       }
@@ -114,7 +83,6 @@ export class GeneraAbilityValue {
       }
 
     }
-    //console.log('%c speedOfActionInterval:', 'color: red');
 
   }
   beforeDestroy() {
@@ -132,7 +100,7 @@ export class GeneraAbilityValue {
       console.log('%c this.healthPoints:', 'color: red', this.healthPoints);
 
       //CentralManager.instance.addLogMessage(`The ${this.name} takes ${_damageValue} points of damage `);
-      CentralManager.instance.addLogMessage(`The ${_attacker} attacks the ${this.name}, causing ${_damageValue} points of damage. `);
+      CentralManager.instance.addLogMessage(`The ${_attacker} attacks the ${this.name+this.index}, causing ${_damageValue} points of damage. `);
 
       
       if (this.healthPoints <= 0) {
@@ -140,66 +108,158 @@ export class GeneraAbilityValue {
         this.healthPoints = 0;
         this.beforeDestroy();
         console.log('%c CentralManager.instance:', 'color: red', CentralManager.instance);
-
+        return "is dead"
       }
+      return "Alive"
     }
-
   }
   determineWhetherItIsInTheCombatRange(inputCoordinate){
-    return distanceCalculation(this.coordinatePosition, inputCoordinate);
+    return _GF.distanceCalculation(this.coordinatePosition, inputCoordinate);
   }
   refreshMapSize(){
-    this.coordinatePosition = [mapSize[0] / 2, mapSize[1] / 2]; 
+    this.coordinatePosition = [CentralManager.instance.mapSize[0] / 2, CentralManager.instance.mapSize[1] / 2]; 
   }
 }
+
 export class GamePlayer extends GeneraAbilityValue {
   constructor() {
     super();
     //console.log('%c SlimeMonster:', 'color: red');
-
+    this.currentExperiencePoints=0;
     this.name = "Player";
-    console.log('%c this.coordinatePosition:', 'color: red', this.coordinatePosition);
+    console.log('%c this.GamePlayer:', 'color: red', this);
+     
   }
+  // generateEXPTable(){
+  //   for (let index = 0; index < array.length; index++) {
+  //     const element = array[index];
+      
+  //   }
+  // }
+  attackSpeedInterval() {
+    //if (this.state == "in combat") {
+    //CentralManager.instance._GamePlayer.injuried(this.name, this.attackPower);
+    var getExp=CentralManager.instance._monsterManager.attackTheClosestToMonsters(this);
+    if(getExp>0){
+      this.currentExperiencePoints+=getExp;
+      CentralManager.instance.addLogMessage(`Gain ${getExp} experience.`);
+
+      this.getLevelData(this.basicLevel);
+
+      if(this.currentExperiencePoints>=this.getLevelData(this.basicLevel)){
+        this.levelUp();
+      }
+    }
+    //}
+    //console.log('%c attackSpeedInterval:', 'color: red');
+  }
+  getLevelData(_level) {
+    let levelExp=CentralManager.instance.expTable.find(x=>x.level==_level);
+    //console.log('%c getLevelData:', 'color: #afcdf3;',levelExp);
+    return levelExp.exp;
+  }
+
   speedOfActionInterval() {
     //console.log('%c GamePlayer.speedOfActionInterval:', 'color: #34a7ce8f');
+      var central = CentralManager.instance;
+      //console.log('%c central:', 'color: red', central);
+      //console.log('%c determineWhetherItIsInTheCombatRange:', 'color: red', _dis);
+      if (this.state == "on standby") {
+        this.destinationAngle = _GF.getRandomInt(0, 360);
+        var _RandomMovement = _GF.getRandomInt(1, this.maximumRangeOfMovement);
+        this.destinationCoordinates = _GF.movePoint(this.coordinatePosition[0], this.coordinatePosition[1], this.destinationAngle,
+          _RandomMovement);
 
+        var pass = false;
+        while (!pass) {
+          //console.log('%c _temp', 'color: blue', _temp);
+          this.destinationAngle = _GF.getRandomInt(0, 360);
+          this.destinationCoordinates = _GF.movePoint(this.coordinatePosition[0], this.coordinatePosition[1], this.destinationAngle,
+            _GF.getRandomInt(1, this.maximumRangeOfMovement))
+          var _temp = this.destinationCoordinates;
+
+          if (_temp[0] < CentralManager.instance.mapSize[0] && _temp[1] < CentralManager.instance.mapSize[1] &&
+            _temp[0] > 1 && _temp[1] > 1) {
+            pass = true;
+          }
+        }
+        //console.log('%c new destinationCoordinates', 'color: blue', this.destinationCoordinates);
+
+        this.state = "on the move";
+        //console.log('%c this.state:on the move', 'color: blue');
+
+      }
+      //var _dis = _GF.distanceCalculation(this.coordinatePosition, this.destinationCoordinates);
+
+      //console.log('%c this._dis:', 'color: red', _dis);
+      else if (this.state == "on the move") {
+        if (_GF.distanceCalculation(this.coordinatePosition, this.destinationCoordinates) > 1) {
+          this.coordinatePosition = _GF.movePoint(this.coordinatePosition[0], this.coordinatePosition[1], this.destinationAngle, 0.1);
+          var _dis = central._GamePlayer.determineWhetherItIsInTheCombatRange(this.coordinatePosition);
+          if (_dis <= this.attackDistance) {
+            this.state = "in combat"
+          }
+        }
+        else {
+          this.state = "on standby"
+          //console.log('%c this.state:on standby', 'color: blue');
+        }
+
+      }
+
+    
+  }
+  levelUp(){
+    CentralManager.instance.addLogMessage(`Character ${this.name} has been upgraded.`);
+    this.basicLevel+=1;
+    this.healthPoints = 100 + (this.basicLevel*10);
+    this.currentExperiencePoints=0;
   }
 }
-
 
 export class SlimeMonster extends GeneraAbilityValue {
-  constructor() {
+  constructor(index) {
     super();
     //console.log('%c SlimeMonster:', 'color: red');
-    
+    this.attackDistance = 2;
     this.healthPoints = 5;
     this.name = "Slime";
-    
+    this.index=index;
+    this.exp=50;
   }
 }
+
 export class GoblinMonster extends GeneraAbilityValue {
-  constructor() {
+  constructor(index) {
     super();
     //console.log('%c GoblinMonster:', 'color: red');
-
+    this.attackDistance = 5;
     this.healthPoints = 50;
     this.name = "Goblin";
+    this.index=index;
+    this.exp=150;
+
+
   }
 }
-var mapSize = [5, 5];
-export class CentralManager{
 
-  _monsterManager = new MonsterManager();
+export class CentralManager{
+  mapSize= [5, 5];
+  //_monsterManager = new MonsterManager();
   _BackpackBool=false;
   _AbilityTableBool = false;
   _CoordinatesPanal = false;
-  _GamePlayer = new GamePlayer();
+  expTable=_GF.createExpTable(100);
+
+  //_GamePlayer = new GamePlayer();
   _LogMessage=[];
   timerlist = [
   ];
   constructor() {
     if (!CentralManager.instance) {
       CentralManager.instance = this;
+      this._monsterManager = new MonsterManager();    
+      this._GamePlayer = new GamePlayer();
     }
     //return CentralManager.instance;
     console.log('%c CentralManager:', 'color: #afcdf3;');
@@ -243,9 +303,9 @@ export class CentralManager{
       else{
         ctx.fillStyle = '#ff0000';
       }
-      //var zzz = colors[getRandomInt(0, colors.length)];
+      //var zzz = colors[_GF.getRandomInt(0, colors.length)];
 
-      //console.log('%c zzz:', 'color: yellow', getRandomInt(0, colors.length));
+      //console.log('%c zzz:', 'color: yellow', _GF.getRandomInt(0, colors.length));
       ctx.beginPath();
       const element = _list[index].coordinatePosition;
       ctx.arc(element[0], element[1], 1, 0, 2 * Math.PI);      
@@ -257,17 +317,17 @@ export class CentralManager{
   enterMap(mapData){
     //var mapData = eval(`${mapData.}`);
     this.addLogMessage(`EnterMap ${mapData.mapName}`);
-
     console.log('%c mapData:', 'color: green', mapData);
-    mapSize = mapData.mapSize;
+    CentralManager.instance.mapSize = mapData.mapSize;
+
     this._GamePlayer.refreshMapSize();
     var canvas = document.getElementById("MiniMap");
     //console.log(canvas)
     if (canvas == null)
       return false;
     var ctx = canvas.getContext('2d');
-    canvas.width = mapSize[0];
-    canvas.height = mapSize[1];
+    canvas.width = CentralManager.instance.mapSize[0];
+    canvas.height = CentralManager.instance.mapSize[1];
     this.addLogMessage("mapInitializationMonster");
 
     this._monsterManager.mapInitializationMonster(mapData.mapMonster);
@@ -279,12 +339,31 @@ export class CentralManager{
     //   const element = _list[index].coordinatePosition;
     //   //console.log('%c viewAllCoordinates:', 'color: blue', element);
     // } 
+    //console.log('%c viewAllCoordinates:', 'color: blue', viewAllCoordinates);
+
+    const iterator = this._monsterManager.getMonsterMaplist()[Symbol.iterator]();
+    console.log('%c iterator:', 'color: blue', iterator);
+
   }
   obtainBiologicalInformationOnTheMap(){
     var _list = this._monsterManager.getJSON_MonsterMaplist();
     _list.push(this._GamePlayer);
     return _list;
   }
+  
+  // obtainBiologicalInformationOnTheMap(){
+  //   var _list=this._monsterManager.getJSON_MonsterMaplist()
+  //   _list.forEach(element => {
+  //      if(element.)
+  //   });
+
+  //   _list.push(this._GamePlayer);
+  //   return _list;
+  // }
+  
+
+
+
   centralBeforeDestroy(){
     var _list = this._monsterManager.getMonsterMaplist();
     _list.push(this._GamePlayer);
@@ -302,9 +381,17 @@ export class CentralManager{
     }
 
   }
+  attackTheNearestTarget(){
+    console.log('%c attackTheNearestTarget:', 'color: blue');
+
+  }
+  detectTheNearestTarget(){
+    console.log('%c detectTheNearestTarget:', 'color: blue');
+
+  }
   static showThis() {
     console.log('%c showThis:', 'color: blue', CentralManager.instance);
-    
+
   }
 }
 
@@ -313,8 +400,8 @@ export class MonsterManager {
     let monsterMaplist = [];
 
     //console.log('%c Mons terManager_constructor:', 'color: red');
-    this.generateSpecifieMonster = function (monsterName) {
-      monsterMaplist.push(eval(`new ${monsterName}()`));
+    this.generateSpecifieMonster = function (monsterName,numberOfMonsters) {
+      monsterMaplist.push(eval(`new ${monsterName}(numberOfMonsters)`));
     //console.log('%c GenerateSpecifieMonster_monsterMaplist:', 'color: red', this.monsterMaplist);
     //this.monsterMaplist.push(new GoblinMonster());
     }
@@ -322,16 +409,44 @@ export class MonsterManager {
       //this.monsterMaplist = JSON.parse(JSON.stringify(monsterMaplist));
       return JSON.parse(JSON.stringify(monsterMaplist));
     }
+
     this.getMonsterMaplist = function () {
       //this.monsterMaplist = JSON.parse(JSON.stringify(monsterMaplist));
       return monsterMaplist;
     }
+    this.attackTheClosestToMonsters = function (_GamePlayerData) {
+      //this.monsterMaplist = JSON.parse(JSON.stringify(monsterMaplist));
+     // var _target;
+      for (let index = 0; index < monsterMaplist.length; index++) {
+        const monster = monsterMaplist[index];
+        let _dis=_GF.distanceCalculation(_GamePlayerData.coordinatePosition,monster.coordinatePosition);
+        if(_dis<10){
+          console.log('%c attackTheClosestToMonsters:距離內', 'color: blue',_dis);
+          let _monsterStatus=monster.injuried(_GamePlayerData.name, _GamePlayerData.attackPower);
+          if(_monsterStatus=="is dead"){
+            console.log('%c splice before', 'color: blue',this.getJSON_MonsterMaplist());
+            monsterMaplist.splice(index,1);
+            console.log('%c splice After', 'color: blue',monsterMaplist);
+            //CentralManager.instance.addLogMessage(`The ${_attacker} attacks the ${this.name+this.index}, causing ${_damageValue} points of damage. `);
+            return monster.exp;
+          }
+          break;
+          //if(element.healthPoints)
+        }
+      }
+      return 0;
+      // for (const monster of monsterMaplist) {
+
+      // }
+      //return monsterMaplist;
+    }
+
     this.mapInitializationMonster = function (mapList) {
         mapList.forEach(element => {
         var numberOfMonsters = monsterMaplist.filter(x => x.name === element.name).length;
 
         while (numberOfMonsters < element.maxNumber) {
-          this.generateSpecifieMonster(element.className);
+          this.generateSpecifieMonster(element.className,numberOfMonsters);
           numberOfMonsters += 1;
         }
         //console.log('%c mapInitializationMonster:', 'color: red', this.monsterMaplist);

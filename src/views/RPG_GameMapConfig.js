@@ -13,8 +13,8 @@ export const NOVICE_MAP =
   mapName: 'NOVICE(初心者地圖)',
   mapSize: [100, 100],
   mapMonster:[
-    { className: "SlimeMonster", maxNumber: 40, name: "Slime" },
-    { className: "GoblinMonster", maxNumber: 5, name: "Goblin" }
+    { className: "SlimeMonster", maxNumber: 10, name: "Slime" },
+    { className: "GoblinMonster", maxNumber: 30, name: "Goblin" }
 ]};
 
 //export default zzz=new MonsterManager();
