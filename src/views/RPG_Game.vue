@@ -11,7 +11,7 @@
     </div>
     <canvas id="MiniMap">
     </canvas>
-    <div style="position: absolute;display: flex; z-index: 22;bottom: 0px;right: 0px;z-index: 44;">
+    <div id="DisplayOptions">
       <button type="button" style="background: #1eff007a;
                 width: 10vw;
                 height: 10vh;" v-on:click="CentralManager._BackpackBool = !CentralManager._BackpackBool ">背包</button>
@@ -36,7 +36,8 @@
     </div>
     
   </section>
-  <ArrayPanel v-if="CentralManager._CoordinatesPanal"
+  <ArrayPanel style="height: 80%;"
+  v-if="CentralManager._CoordinatesPanal"
                 :_ArrayProp="CentralManager.obtainBiologicalInformationOnTheMap()"
   ></ArrayPanel>
 </template>

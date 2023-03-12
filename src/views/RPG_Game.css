@@ -55,3 +55,8 @@ position: absolute;
     height: 100%;
     z-index: 33;
 }
+
+#DisplayOptions {
+
+    position: absolute;display: flex; bottom: 0px;right: 0px;z-index: 44;
+}

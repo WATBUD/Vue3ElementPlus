@@ -238,8 +238,6 @@ export class GoblinMonster extends GeneraAbilityValue {
     this.name = "Goblin";
     this.index=index;
     this.exp=150;
-
-
   }
 }
 
@@ -265,6 +263,13 @@ export class CentralManager{
     console.log('%c CentralManager:', 'color: #afcdf3;');
     this.timerlist.push(setInterval(this.setAllCoordinatesPoint.bind(this), this.speedOfAction * 500));
   }
+  getLogMessage() {
+    console.log('%c getLogMessage:', 'color: #afcdf3;',this);
+
+    return this._LogMessage;
+  }
+  
+
   setAllCoordinatesPoint() {
 
     var canvas = document.getElementById("MiniMap");
@@ -322,7 +327,7 @@ export class CentralManager{
 
     this._GamePlayer.refreshMapSize();
     var canvas = document.getElementById("MiniMap");
-    //console.log(canvas)
+    console.log(canvas)
     if (canvas == null)
       return false;
     var ctx = canvas.getContext('2d');
@@ -361,10 +366,12 @@ export class CentralManager{
   //   return _list;
   // }
   
-
-
-
   centralBeforeDestroy(){
+    CentralManager.instance = null;
+    this._LogMessage=[];
+    this.timerlist.forEach(element => {
+      clearInterval(element);
+    });
     var _list = this._monsterManager.getMonsterMaplist();
     _list.push(this._GamePlayer);
     //this._GamePlayer.beforeDestroy();
