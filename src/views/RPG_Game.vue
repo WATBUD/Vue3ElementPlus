@@ -1,6 +1,6 @@
 <template>
   <section id="MainScreen">
-    <div class="visible-scrollbar" style="position: absolute; background: red;width: 50%;height:50%;z-index: 0;">
+    <div id="LogMessage">
       <ul style="display: flex;flex-direction: column-reverse;">
         <li style="color: blue;font-size: 200%;width: 100%;" v-for="(item, index) in CentralManager._LogMessage" :key='index'>
           <!-- index: {{ index }} -->
