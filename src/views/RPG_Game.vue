@@ -36,9 +36,10 @@
     </div>
     
   </section>
-  <ArrayPanel style="height: 80%;"
+  <ArrayPanel 
   v-if="CentralManager._CoordinatesPanal"
-                :_ArrayProp="CentralManager.obtainBiologicalInformationOnTheMap()"
+ :_height="'80%'"
+ :_ArrayProp="CentralManager.obtainBiologicalInformationOnTheMap()"
   ></ArrayPanel>
 </template>
 

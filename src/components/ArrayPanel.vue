@@ -1,19 +1,11 @@
 <template>
-  <section id="ArrayPanel">
-    <div class="visible-scrollbar" style="position: absolute;
-      background: #0000ff8a;
-      width: 100%;
-      height: 100%;
-      color: yellow;
-      z-index: 0;
-      font-size: 5px;word-break: keep-all; ">
-
-
+  <!-- <section id="ArrayPanel"> -->
+    <div class="visible-scrollbar" :style="{height:_height}">
        <div v-for="(item, index) in _ArrayProp" :key='item'>
        {{ index }} :{{ item }} 
         <!-- index:{{ index }}  -->
       </div>
-       </div>
+    </div>
       <!-- <ul style="display: flex;flex-direction: column-reverse;">
         <li style="color: yellow;font-size: 200%;width: 10%;" 
         v-for="(item, index) in _ArrayProp" :key='index'>
@@ -21,7 +13,7 @@
         </li>
       </ul> -->
 
-  </section>
+  <!-- </section> -->
 </template>
 
 <script lang ="ts">
@@ -32,14 +24,10 @@ export default defineComponent({
     _ArrayProp: {
      type: Object,
       default: () => ({})
-    }
+    },
+    _height:String
+
   },
-  // setup(props) {
-  //   const arrayLength = computed(() => props._ArrayProp.length)
-  //   return {
-  //     arrayLength
-  //   }
-  // },
   data() {
     return {
       list: [
