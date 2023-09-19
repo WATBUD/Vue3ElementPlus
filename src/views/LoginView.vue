@@ -31,8 +31,18 @@ export default defineComponent({
   methods: {
 
     handleLogin() {
-      axios.get('https://localhost:7039/weatherforecast')
-        .then((res) => { console.table(res.data) })
+      axios.get('http://watbud.ddns.net:7777/WeatherForecast')
+        .then((res) => { 
+          console.table(res.data) 
+          console.log(
+            '%c Announcement, getFormattedData',
+            'color:#BB3D00;font-family:system-ui;font-size:2rem;font-weight:bold',
+            'res.data',
+            res.data,
+          );
+        
+        
+        })
         .catch((error) => {
           console.log('%c error:', 'color: red', error);
           if (error.code == "ERR_NETWORK") {
